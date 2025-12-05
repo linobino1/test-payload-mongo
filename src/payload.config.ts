@@ -5,6 +5,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { attachDatabasePool } from '@vercel/functions'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -27,6 +28,9 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
+    afterOpenConnection(adapter) {
+      attachDatabasePool(adapter.connection.getClient())
+    },
   }),
   sharp,
   plugins: [
