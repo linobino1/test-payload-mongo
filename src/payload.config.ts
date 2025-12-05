@@ -28,6 +28,10 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
+    connectOptions: {
+      maxPoolSize: 10,
+      minPoolSize: 2,
+    },
     afterOpenConnection(adapter) {
       attachDatabasePool(adapter.connection.getClient())
     },
